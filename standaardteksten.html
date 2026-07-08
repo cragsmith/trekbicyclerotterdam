@@ -253,7 +253,7 @@ Extra werkzaamheden of aandachtspunten:
 
 <div class="card">
 <div class="email-form" id="emailForm">
-<input id="voornaam" placeholder="Voornaam" oninput="updateEmail()">
+<input id="voornaam" placeholder="Voornaam klant" oninput="updateEmail()">
 <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
 <input type="date" id="datum" oninput="updateEmail()" style="margin-bottom:0;flex:1;">
 <button type="button" style="width:140px;height:36px;margin-top:0;border-radius:4px;font-size:14px;" onclick="openDatePicker()">📅 Kies datum</button>
@@ -412,7 +412,7 @@ function updateEmail() {
 <br>
 <div>Beste ${voornaam},</div>
 <br>
-<div>Hierbij bevestigen wij de afspraak voor geplande werkzaamheden aan jouw fiets op <strong><u>${datum}</u></strong>. We willen je graag verzoeken om de fiets bij onze werkplaats af te geven uiterlijk vóór 10 uur op de dag van de afspraak. Je kunt de fiets ook brengen op één van de voorafgaande dagen. Let op, als de fiets niet op tijd binnen is vervalt de afspraak en zal deze opnieuw ingepland moeten worden.</div>
+<div>Hierbij bevestigen wij de afspraak voor geplande werkzaamheden aan jouw fiets op <strong><u>${datum}</u></strong>. We willen je graag verzoeken om de fiets bij onze werkplaats af te geven <b><u>uiterlijk vóór 10 uur op de dag van de afspraak</u></b>. Je kunt de fiets ook brengen op één van de voorafgaande dagen. Let op, als de fiets niet op tijd binnen is vervalt de afspraak en zal deze opnieuw ingepland moeten worden.</div>
 <br>
 <div>Met sportieve groet!</div>
 <br>
