@@ -383,21 +383,14 @@ function updateServiceHeaders() {
     });
 
     localStorage.setItem("serviceInitials", initials);
-    localStorage.setItem("serviceDate", dateInput.value);
 }
 
 function loadServiceSettings() {
     const initialsSelect = document.getElementById("serviceInitials");
     const dateInput = document.getElementById("serviceDate");
 
-    const savedInitials = localStorage.getItem("serviceInitials");
-    const savedDate = localStorage.getItem("serviceDate");
-
-    if (savedInitials) {
-        initialsSelect.value = savedInitials;
-    }
-
-    dateInput.value = savedDate || getTodayDateValue();
+    // Bij iedere keer laden altijd de datum van vandaag instellen
+    dateInput.value = getTodayDateValue();
 
     updateServiceHeaders();
 }
