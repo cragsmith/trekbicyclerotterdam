@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -6,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Standaard Teksten Werkplaats</title>
 <link rel="icon" type="image/png" href="favicon.png">
-<!-- VERSION 3.4 -->
+<!-- VERSION 3.7 -->
 
 <style>
 body {
@@ -40,6 +41,7 @@ body {
     gap: 35px;
 }
 .left-column,
+.middle-column,
 .right-column {
     display: flex;
     flex-direction: column;
@@ -85,6 +87,14 @@ body {
     color: #423b30;
 }
 
+
+
+.extra-options{width:260px;background:white;color:#423b30;padding:15px;border:1px solid #bbb;border-radius:4px;box-sizing:border-box;font-size:14px;line-height:1.4}
+.extra-options-title{font-weight:bold;font-size:15px;margin-bottom:16px}
+.extra-section{margin-top:16px}.extra-section-title{font-weight:bold;margin-bottom:7px}
+.extra-option{display:flex;align-items:center;gap:8px;margin:6px 0;cursor:pointer}
+.axle-grid{display:grid;grid-template-columns:1fr 28px 28px;column-gap:8px;row-gap:7px;align-items:center}
+.axle-heading{text-align:center;font-weight:bold;font-size:12px}.axle-grid input{justify-self:center;margin:0}
 
 .text-block {
     background: white;
@@ -216,7 +226,7 @@ button:hover {
 - Bandenspanning gecontroleerd
 
 Extra werkzaamheden of aandachtspunten:
--
+<span class="extra-work-lines">-</span>
 </div>
 <button onclick="copyText('block1', this)">📋 Copy</button>
 </div>
@@ -236,18 +246,29 @@ Extra werkzaamheden of aandachtspunten:
 - Alle bouten en moeren aangetrokken op het juiste aandraaimoment
 
 Extra werkzaamheden of aandachtspunten:
--
+<span class="extra-work-lines">-</span>
 </div>
 <button onclick="copyText('block2', this)">📋 Copy</button>
 </div>
 
-<div class="card">
-<div class="text-block" id="block3" contenteditable="true">SRAM Remklauw service: Remklauwen gereinigd, pistons vrij gewerkt en gereset, remleidingen ontlucht, remblokken vervangen, remklauwen uitgelijnd, remblokken ingeremd op rollerbank.
-</div>
-<button onclick="copyText('block3', this)">📋 Copy</button>
 </div>
 
-</div>
+<div class="middle-column">
+<div class="extra-options">
+<div class="extra-options-title">Extra werkzaamheden</div>
+<div class="extra-section"><div class="extra-section-title">Aandrijving</div>
+<label class="extra-option"><input type="checkbox" id="chainReplace" onchange="updateExtraWork()"><span>Ketting vervangen</span></label>
+<label class="extra-option"><input type="checkbox" id="cassetteReplace" onchange="updateExtraWork()"><span>Cassette vervangen</span></label></div>
+<div class="extra-section"><div class="axle-grid"><div class="extra-section-title">Banden</div><div class="axle-heading">V</div><div class="axle-heading">A</div>
+<div>Buitenband</div><input type="checkbox" id="outerFront" onchange="updateExtraWork()"><input type="checkbox" id="outerRear" onchange="updateExtraWork()">
+<div>Binnenband</div><input type="checkbox" id="innerFront" onchange="updateExtraWork()"><input type="checkbox" id="innerRear" onchange="updateExtraWork()"></div></div>
+<div class="extra-section"><div class="axle-grid"><div class="extra-section-title">Remblokken</div><div class="axle-heading">V</div><div class="axle-heading">A</div>
+<div>Schijfremblokken</div><input type="checkbox" id="brakePadsFront" onchange="updateExtraWork()"><input type="checkbox" id="brakePadsRear" onchange="updateExtraWork()"></div></div>
+<div class="extra-section"><div class="axle-grid"><div class="extra-section-title">Rem ontluchten</div><div class="axle-heading">V</div><div class="axle-heading">A</div>
+<div>Remleiding</div><input type="checkbox" id="bleedFront" onchange="updateExtraWork()"><input type="checkbox" id="bleedRear" onchange="updateExtraWork()"></div></div>
+<div class="extra-section"><div class="extra-section-title">Remklauw</div>
+<label class="extra-option"><input type="checkbox" id="sramCaliperService" onchange="updateExtraWork()"><span>SRAM Remklauw Service</span></label></div>
+</div></div>
 
 <div class="right-column">
 
@@ -396,6 +417,57 @@ function loadServiceSettings() {
 }
 
 
+
+function updateExtraWork() {
+    const lines = [];
+    if (chainReplace.checked) lines.push("- Ketting vervangen");
+    if (cassetteReplace.checked) lines.push("- Cassette vervangen");
+
+    const of=outerFront.checked, or=outerRear.checked, inf=innerFront.checked, inr=innerRear.checked;
+
+    // Banden: combineer selecties tot één passende standaardtekst waar mogelijk.
+    if (of && or && inf && inr) {
+        lines.push("- Binnenband en buitenband, voor én achter, vervangen");
+    } else if (of && inf && !or && !inr) {
+        lines.push("- Binnenband en buitenband voor vervangen");
+    } else if (or && inr && !of && !inf) {
+        lines.push("- Binnenband en buitenband achter vervangen");
+    } else {
+        // Binnenbanden
+        if (inf && inr) {
+            lines.push("- Binnenband voor én achter vervangen");
+        } else if (inf) {
+            lines.push("- Binnenband voor vervangen");
+        } else if (inr) {
+            lines.push("- Binnenband achter vervangen");
+        }
+
+        // Buitenbanden
+        if (of && or) {
+            lines.push("- Buitenband voor én achter vervangen (binnenbanden nog in orde)");
+        } else if (of) {
+            lines.push("- Buitenband voor vervangen (binnenband nog in orde)");
+        } else if (or) {
+            lines.push("- Buitenband achter vervangen (binnenband nog in orde)");
+        }
+    }
+
+    const pf=brakePadsFront.checked, pr=brakePadsRear.checked;
+    if (pf && pr) lines.push("- Schijfremblokken voor en achter vervangen, en ingeremd op rollerbank");
+    else if (pf) lines.push("- Schijfremblokken voor vervangen en ingeremd op rollerbank");
+    else if (pr) lines.push("- Schijfremblokken achter vervangen en ingeremd op rollerbank");
+
+    const bf=bleedFront.checked, br=bleedRear.checked;
+    if (bf && br) lines.push("- Remleiding voor en achter ontlucht");
+    else if (bf) lines.push("- Remleiding voor ontlucht");
+    else if (br) lines.push("- Remleiding achter ontlucht");
+
+    if (sramCaliperService.checked) lines.push("- SRAM remklauw service: Remklauwen gereinigd, pistons vrij gewerkt en gereset, remleidingen ontlucht, remblokken vervangen, remklauwen uitgelijnd, remblokken ingeremd op rollerbank.");
+
+    const extraText = lines.length ? lines.join("\n") : "-";
+    document.querySelectorAll(".extra-work-lines").forEach(el => el.textContent = extraText);
+}
+
 function updateEmail() {
     const voornaam = document.getElementById("voornaam").value;
     const datum = formatDutchDate(document.getElementById("datum").value);
@@ -504,6 +576,12 @@ function openDatePicker() {
 }
 
 loadServiceSettings();
+
+document.querySelectorAll(".extra-options input[type=\'checkbox\']").forEach(option => {
+    option.checked = false;
+});
+updateExtraWork();
+
 updateEmail();
 </script>
 
