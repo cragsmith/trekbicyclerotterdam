@@ -1,0 +1,2892 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Fietsinspectie</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffffff;
+    color: #171717;
+}
+
+
+/* ========================================
+   PAGINA
+======================================== */
+
+.page {
+    width: 100%;
+    min-height: 100vh;
+    padding: 30px 70px 24px;
+}
+
+
+/* ========================================
+   HEADER
+======================================== */
+
+.page-header {
+    width: 100%;
+    max-width: 1380px;
+    margin: 0 auto 22px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+h1 {
+    margin: 0 0 10px;
+    font-size: 36px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.subtitle {
+    margin: 0;
+    font-size: 17px;
+    color: #686868;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ebike-toggle,
+.back-button {
+    padding: 10px 14px;
+
+    background: #eaeaea;
+
+    border: 1px solid #cccccc;
+    border-radius: 9px;
+
+    color: #171717;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+.ebike-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.ebike-toggle input {
+    margin: 0;
+    cursor: pointer;
+}
+
+
+/* ========================================
+   HOOFDLAYOUT
+======================================== */
+
+.inspection-layout {
+    width: 100%;
+    max-width: 1380px;
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        390px;
+
+    gap: 22px;
+}
+
+
+/* ========================================
+   FIETSPANEEL
+======================================== */
+
+.bike-panel {
+    height: 730px;
+
+    position: relative;
+
+    background: #eaeaea;
+
+    border: 1px solid #cccccc;
+    border-radius: 16px;
+
+    overflow: hidden;
+}
+
+.bike-stage {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bike-stage img {
+    width: 90%;
+    height: 90%;
+
+    object-fit: contain;
+
+    pointer-events: none;
+    user-select: none;
+}
+
+
+/* ========================================
+   HOTSPOTS
+
+   Intern genummerd.
+   Visueel blanco.
+======================================== */
+
+.hotspot {
+    position: absolute;
+
+    width: 32px;
+    height: 32px;
+
+    transform: translate(-50%, -50%);
+
+    border-radius: 50%;
+
+    border: 3px solid #ffffff;
+
+    background: #171717;
+
+    box-shadow:
+        0 3px 10px
+        rgba(0,0,0,0.25);
+
+    cursor: pointer;
+
+    z-index: 10;
+
+    transition:
+        transform 0.15s ease,
+        background 0.15s ease;
+}
+
+.hotspot:hover {
+    transform:
+        translate(-50%, -50%)
+        scale(1.18);
+}
+
+.hotspot.selected {
+    background: #777777;
+}
+
+.hotspot.ebike-hotspot {
+    width: 38px;
+    height: 38px;
+}
+
+
+/* ========================================
+   POPUP
+======================================== */
+
+.hotspot-popup {
+    position: absolute;
+
+    z-index: 100;
+
+    width: 360px;
+    max-height: 600px;
+
+    overflow-y: auto;
+
+    display: none;
+
+    background: #ffffff;
+
+    border: 1px solid #cccccc;
+    border-radius: 12px;
+
+    padding: 14px;
+
+    box-shadow:
+        0 12px 32px
+        rgba(0,0,0,0.18);
+}
+
+.hotspot-popup.open {
+    display: block;
+}
+
+.hotspot-popup h3 {
+    margin: 0 0 12px;
+    font-size: 17px;
+}
+
+
+/* ========================================
+   ONDERDELEN
+======================================== */
+
+.component {
+    margin-bottom: 7px;
+
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+
+    background: #f7f7f7;
+
+    overflow: hidden;
+}
+
+.component-main {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 9px 10px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.component-main:hover {
+    background: #eeeeee;
+}
+
+.component-main input {
+    margin: 0;
+    cursor: pointer;
+}
+
+
+/* ========================================
+   DETAILOPTIES
+======================================== */
+
+.component-details {
+    display: none;
+
+    padding:
+        10px 12px 12px;
+
+    background: #ffffff;
+
+    border-top:
+        1px solid #dddddd;
+}
+
+.component.active .component-details {
+    display: block;
+}
+
+
+/* ========================================
+   INSPECTIE / UITVOEREN
+======================================== */
+
+.choice-section {
+    margin-bottom: 12px;
+}
+
+.choice-section:last-child {
+    margin-bottom: 0;
+}
+
+.choice-title {
+    margin-bottom: 6px;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 0.7px;
+
+    color: #686868;
+}
+
+.choice-options {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 5px;
+}
+
+
+/* ========================================
+   KEUZEKNOPPEN
+======================================== */
+
+.choice-button {
+    position: relative;
+}
+
+.choice-button input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.choice-button span {
+    display: block;
+
+    padding: 6px 9px;
+
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+
+    background: #f3f3f3;
+
+    font-size: 12px;
+
+    cursor: pointer;
+
+    user-select: none;
+}
+
+.choice-button input:checked + span {
+    background: #171717;
+    color: #ffffff;
+
+    border-color: #171717;
+}
+
+
+/* ========================================
+   RESULTAATPANEEL
+======================================== */
+
+.result-panel {
+    height: 730px;
+
+    display: flex;
+    flex-direction: column;
+
+    background: #eaeaea;
+
+    border: 1px solid #cccccc;
+    border-radius: 16px;
+
+    padding: 20px;
+}
+
+.result-panel h2 {
+    margin: 0 0 7px;
+    font-size: 22px;
+}
+
+.result-description {
+    margin: 0 0 16px;
+
+    color: #686868;
+
+    font-size: 14px;
+}
+
+
+/* ========================================
+   RESULTAATTEKST
+======================================== */
+
+.result-text {
+    width: 100%;
+    flex: 1;
+
+    resize: none;
+
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    padding: 14px;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 14px;
+    line-height: 1.5;
+
+    color: #171717;
+
+    outline: none;
+}
+
+.result-text:focus {
+    border-color: #999999;
+}
+
+
+/* ========================================
+   KNOPPEN
+======================================== */
+
+.actions {
+    display: grid;
+
+    gap: 9px;
+
+    margin-top: 14px;
+}
+
+.button {
+    width: 100%;
+
+    border: 1px solid #cccccc;
+    border-radius: 9px;
+
+    padding: 11px 14px;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.button-primary {
+    background: #171717;
+    color: #ffffff;
+
+    border-color: #171717;
+}
+
+.button-primary:hover {
+    background: #333333;
+}
+
+.button-secondary {
+    background: #ffffff;
+    color: #171717;
+}
+
+.button-secondary:hover {
+    background: #f5f5f5;
+}
+
+
+/* ========================================
+   1920 x 1200
+======================================== */
+
+@media
+(min-width: 1400px)
+and (min-height: 900px) {
+
+    html,
+    body {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .page {
+        height: 100vh;
+    }
+
+}
+
+
+/* ========================================
+   KLEINERE SCHERMEN
+======================================== */
+
+@media (max-width: 1000px) {
+
+    .inspection-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .bike-panel,
+    .result-panel {
+        height: 650px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<div class="page">
+
+
+<!-- ========================================
+     HEADER
+======================================== -->
+
+<header class="page-header">
+
+    <div>
+
+        <h1>
+            FIETSINSPECTIE
+        </h1>
+
+        <p class="subtitle">
+            Selecteer een onderdeel en registreer inspectie en werkzaamheden.
+        </p>
+
+    </div>
+
+
+    <div class="header-actions">
+
+        <label class="ebike-toggle">
+
+            <input
+                type="checkbox"
+                id="ebikeToggle"
+            >
+
+            E-bike
+
+        </label>
+
+
+        <a
+            href="fietstype.html"
+            class="back-button"
+        >
+            ← Ander fietsmodel
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- ========================================
+     HOOFDLAYOUT
+======================================== -->
+
+<main class="inspection-layout">
+
+
+<!-- ========================================
+     FIETS
+======================================== -->
+
+<section class="bike-panel">
+
+    <div
+        class="bike-stage"
+        id="bikeStage"
+    >
+
+        <img
+            id="bikeImage"
+            src=""
+            alt="Geselecteerde fiets"
+        >
+
+        <div
+            class="hotspot-popup"
+            id="hotspotPopup"
+        ></div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ========================================
+     RESULTAAT
+======================================== -->
+
+<aside class="result-panel">
+
+    <h2>
+        WERKBON
+    </h2>
+
+    <p class="result-description">
+        De tekst wordt automatisch opgebouwd en kan handmatig worden aangevuld.
+    </p>
+
+    <textarea
+        id="resultText"
+        class="result-text"
+        placeholder="Nog niets geselecteerd. Je kunt hier ook zelf opmerkingen toevoegen."
+    ></textarea>
+
+    <div class="actions">
+
+        <button
+            class="button button-primary"
+            id="copyButton"
+        >
+            Kopieer alles
+        </button>
+
+        <button
+            class="button button-secondary"
+            id="resetButton"
+        >
+            Inspectie wissen
+        </button>
+
+    </div>
+
+</aside>
+
+
+</main>
+
+
+</div>
+
+
+
+<script>
+
+
+/* ========================================
+   FIETSTYPES
+======================================== */
+
+const bikeTypes = {
+
+    race: {
+        image: "images/racegravel.png"
+    },
+
+    mtb: {
+        image: "images/mtb.png"
+    },
+
+    city: {
+        image: "images/city.png"
+    },
+
+    ebike: {
+        image: "images/ebike.png"
+    },
+
+    other: {
+        image: "images/overig.png"
+    }
+
+};
+
+
+
+/* ========================================
+   FIETSTYPE BEPALEN
+======================================== */
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+let bikeType =
+    params.get("type");
+
+
+if (!bikeTypes[bikeType]) {
+    bikeType = "city";
+}
+
+
+document
+    .getElementById("bikeImage")
+    .src = bikeTypes[bikeType].image;
+
+
+
+/* ========================================
+   HOTSPOTS
+======================================== */
+
+const zones = [
+
+
+/* ========================================
+   1. ACHTERWIEL - BAND / VELG
+======================================== */
+
+{
+    number: 1,
+    id: "achterwielBand",
+    label: "Achterwiel",
+    x: 25,
+    y: 50,
+
+    components: [
+
+        {
+            id: "buitenbandAchter",
+            label: "Buitenband",
+            outputLabel: "Buitenband achter",
+            category: "WIELEN",
+
+            inspection: [
+                "Versleten",
+                "Kapot",
+                "Gescheurd"
+            ],
+
+            actions: [
+                "Vervangen",
+                "Repareren"
+            ]
+        },
+
+        {
+            id: "binnenbandAchter",
+            label: "Binnenband",
+            outputLabel: "Binnenband achter",
+            category: "WIELEN",
+
+            inspection: [
+                "Lek"
+            ],
+
+            actions: [
+                "Vervangen",
+                "Repareren"
+            ]
+        },
+
+        {
+            id: "velgAchter",
+            label: "Velg",
+            outputLabel: "Velg achter",
+            category: "WIELEN",
+
+            inspection: [
+                "Versleten",
+                "Beschadigd",
+                "Gescheurd"
+            ],
+
+            actions: [
+                "Vervangen"
+            ]
+        },
+
+        {
+            id: "spakenAchter",
+            label: "Spaken",
+            outputLabel: "Spaken achter",
+            category: "WIELEN",
+
+            inspection: [
+                "Los",
+                "Gebroken"
+            ],
+
+            actions: [
+                "Vervangen",
+                "Repareren"
+            ]
+        },
+
+        {
+            id: "richtenAchter",
+            label: "Wiel richten",
+            outputLabel: "Achterwiel",
+            category: "WIELEN",
+
+            inspection: [
+                "Slag"
+            ],
+
+            actions: [
+                "Richten"
+            ]
+        }
+
+    ]
+},
+
+
+
+/* ========================================
+   2. ACHTERWIEL - NAAF / CASSETTE / REM
+======================================== */
+
+{
+    number: 2,
+    id: "achterwielNaaf",
+    label: "Achterwiel / aandrijving",
+    x: 22,
+    y: 67,
+
+    components: [
+
+        {
+            id: "cassette",
+            label: "Cassette",
+            outputLabel: "Cassette",
+            category: "AANDRIJVING",
+
+            inspection: [
+                "Versleten"
+            ],
+
+            actions: [
+                "Vervangen"
+            ]
+        },
+
+        {
+            id: "achternaaf",
+            label: "Naaf",
+            outputLabel: "Achternaaf",
+            category: "WIELEN",
+
+            inspection: [
+                "Slijtage",
+                "Speling",
+                "Loopt zwaar"
+            ],
+
+            actions: [
+                "Repareren",
+                "Vervangen"
+            ]
+        },
+
+        {
+            id: "remschijfAchter",
+            label: "Remschijf",
+            outputLabel: "Remschijf achter",
+            category: "REMMEN",
+
+            inspection: [
+                "Krom",
+                "Versleten"
+            ],
+
+            actions: [
+                "Repareren",
+                "Vervangen"
+            ]
+        }
+
+    ]
+},
+
+
+
+/* ========================================
+   3. TRAPAS / CRANK / PEDALEN
+======================================== */
+
+{
+    number: 3,
+    id: "trapas",
+    label: "Trapas / crank",
+    x: 47,
+    y: 68,
+
+    components: [
+
+        {
+            id: "trapasLager",
+            label: "Trapas",
+            outputLabel: "Trapas",
+            category: "AANDRIJVING",
+
+            inspection: [
+                "Versleten",
+                "Speling",
+                "Loopt zwaar"
+            ],
+
+            actions: [
+                "Repareren",
+                "Vervangen"
+            ]
+        },
+
+        {
+            id: "crank",
+            label: "Crank",
+            outputLabel: "Crank",
+            category: "AANDRIJVING",
+
+            inspection: [
+                "Beschadigd",
+                "Los"
+            ],
+
+            actions: [
+                "Repareren",
+                "Vervangen"
+            ]
+        },
+
+        {
+            id: "pedalen",
+            label: "Pedalen",
+            outputLabel: "Pedalen",
+            category: "AANDRIJVING",
+
+            inspection: [
+                "Versleten",
+                "Speling",
+                "Beschadigd"
+            ],
+
+            actions: [
+                "Vervangen"
+            ]
+        }
+
+    ]
+},
+
+
+
+/* ========================================
+   4. ZADEL / ZADELpen
+======================================== */
+
+{
+    number: 4,
+    id: "zadelpen",
+    label: "Zadel / zadelpen",
+    x: 43,
+    y: 32,
+
+    components: [
+
+        {
+            id: "zadelpenOnderdeel",
+            label: "Zadelpen",
+            outputLabel: "Zadelpen",
+            category: "FRAME",
+
+            inspection: [
+                "Beschadigd",
+                "Vast",
+                "Speling"
+            ],
+
+            actions: [
+                "Repareren",
+                "Vervangen"
+            ]
+        },
+
+        {
+            id: "isospeed",
+            label: "IsoSpeed",
+            outputLabel: "IsoSpeed",
+            category: "FRAME",
+
+            inspection: [
+                "Speling",
+                "Kraak"
+            ],
+
+            actions: [
+                "Repareren"
+            ]
+        }
+
+    ]
+},
+
+
+
+/* ========================================
+   5. FRAME / ONDERBUIS
+======================================== */
+
+{
+    number: 5,
+    id: "frame",
+    label: "Frame",
+    x: 54,
+    y: 52,
+
+    components: [
+
+        {
+            id: "rivnut",
+            label: "Rivnut",
+            outputLabel: "Rivnut",
+            category: "FRAME",
+
+            inspection: [
+                "Los",
+                "Beschadigd"
+            ],
+
+            actions: [
+                "Repareren",
+                "Vervangen"
+            ]
+        },
+
+        {
+            id: "bidonhouder",
+            label: "Bidonhouder",
+            outputLabel: "Bidonhouder",
+            category: "FRAME",
+
+            inspection: [
+                "Los",
+                "Beschadigd"
+            ],
+
+            actions: [
+                "Repareren",
+                "Vervangen"
+            ]
+        }
+
+    ]
+},
+
+
+
+/* ========================================
+   6. VOORWIEL - NAAF / REM
+======================================== */
+
+{
+    number: 6,
+    id: "voorwielNaaf",
+    label: "Voorwiel / rem",
+    x: 79,
+    y: 67,
+
+    components: [
+
+        {
+            id: "voornaaf",
+            label: "Naaf",
+            outputLabel: "Voornaaf",
+            category: "WIELEN",
+
+            inspection: [
+                "Slijtage",
+                "Speling",
+                "Loopt zwaar"
+            ],
+
+            actions: [
+                "Repareren",
+                "Vervangen"
+            ]
+        },
+
+        {
+            id: "remschijfVoor",
+            label: "Remschijf",
+            outputLabel: "Remschijf voor",
+            category: "REMMEN",
+
+            inspection: [
+                "Krom",
+                "Versleten"
+            ],
+
+            actions: [
+                "Repareren",
+                "Vervangen"
+            ]
+        }
+
+    ]
+},
+
+
+
+/* ========================================
+   7. VOORWIEL - BAND / VELG
+======================================== */
+
+{
+    number: 7,
+    id: "voorwielBand",
+    label: "Voorwiel",
+    x: 83,
+    y: 49,
+
+    components: [
+
+        {
+            id: "buitenbandVoor",
+            label: "Buitenband",
+            outputLabel: "Buitenband voor",
+            category: "WIELEN",
+
+            inspection: [
+                "Versleten",
+                "Kapot",
+                "Gescheurd"
+            ],
+
+            actions: [
+                "Vervangen",
+                "Repareren"
+            ]
+        },
+
+        {
+            id: "binnenbandVoor",
+            label: "Binnenband",
+            outputLabel: "Binnenband voor",
+            category: "WIELEN",
+
+            inspection: [
+                "Lek"
+            ],
+
+            actions: [
+                "Vervangen",
+                "Repareren"
+            ]
+        },
+
+        {
+            id: "velgVoor",
+            label: "Velg",
+            outputLabel: "Velg voor",
+            category: "WIELEN",
+
+            inspection: [
+                "Versleten",
+                "Beschadigd"
+            ],
+
+            actions: [
+                "Vervangen"
+            ]
+        },
+
+        {
+            id: "spakenVoor",
+            label: "Spaken",
+            outputLabel: "Spaken voor",
+            category: "WIELEN",
+
+            inspection: [
+                "Los",
+                "Gebroken"
+            ],
+
+            actions: [
+                "Repareren",
+                "Vervangen"
+            ]
+        },
+
+        {
+            id: "richtenVoor",
+            label: "Wiel richten",
+            outputLabel: "Voorwiel",
+            category: "WIELEN",
+
+            inspection: [
+                "Slag"
+            ],
+
+            actions: [
+                "Richten"
+            ]
+        }
+
+    ]
+},
+
+
+
+/* ========================================
+   8. BALHOOFD
+======================================== */
+
+{
+    number: 8,
+    id: "balhoofd",
+    label: "Balhoofd",
+    x: 68,
+    y: 34,
+
+    components: [
+
+        {
+            id: "balhoofdLager",
+            label: "Balhoofd",
+            outputLabel: "Balhoofd",
+            category: "STUURINRICHTING",
+
+            inspection: [
+                "Versleten",
+                "Speling",
+                "Loopt zwaar"
+            ],
+
+            actions: [
+                "Repareren",
+                "Vervangen"
+            ]
+        }
+
+    ]
+},
+
+
+
+/* ========================================
+   9. STUUR / BEDIENING
+======================================== */
+
+{
+    number: 9,
+    id: "stuur",
+    label: "Stuur / bediening",
+    x: 73,
+    y: 23,
+
+    components: [
+
+        {
+            id: "stuurOnderdeel",
+            label: "Stuur",
+            outputLabel: "Stuur",
+            category: "STUURINRICHTING",
+
+            inspection: [
+                "Scheef",
+                "Beschadigd"
+            ],
+
+            actions: [
+                "Repareren",
+                "Vervangen"
+            ]
+        },
+
+        {
+            id: "stuurlint",
+            label: "Stuurlint / handvatten",
+            outputLabel: "Stuurlint / handvatten",
+            category: "STUURINRICHTING",
+
+            inspection: [
+                "Versleten",
+                "Beschadigd"
+            ],
+
+            actions: [
+                "Vervangen"
+            ]
+        },
+
+        {
+            id: "shifter",
+            label: "Shifter",
+            outputLabel: "Shifter",
+            category: "SCHAKELEN",
+
+            inspection: [
+                "Defect",
+                "Werkt slecht"
+            ],
+
+            actions: [
+                "Repareren",
+                "Vervangen"
+            ]
+        },
+
+        {
+            id: "kabel",
+            label: "Kabel",
+            outputLabel: "Kabel",
+            category: "SCHAKELEN",
+
+            inspection: [
+                "Gebroken",
+                "Versleten"
+            ],
+
+            actions: [
+                "Vervangen"
+            ]
+        },
+
+        {
+            id: "batterijen",
+            label: "Batterijen",
+            outputLabel: "Batterijen",
+            category: "SCHAKELEN",
+
+            inspection: [
+                "Leeg"
+            ],
+
+            actions: [
+                "Vervangen"
+            ]
+        }
+
+    ]
+}
+
+];
+
+
+
+/* ========================================
+   10. E-BIKE HOTSPOT
+======================================== */
+
+const ebikeZone = {
+
+    number: 10,
+
+    id: "ebike",
+
+    label: "E-bike componenten",
+
+    x: 59,
+    y: 45,
+
+    ebike: true,
+
+    components: [
+
+        {
+            id: "accu",
+            label: "Accu",
+            outputLabel: "Accu",
+            category: "E-BIKE",
+
+            inspection: [
+                "Defect",
+                "Beschadigd",
+                "Speling"
+            ],
+
+            actions: [
+                "Repareren",
+                "Vervangen"
+            ]
+        },
+
+        {
+            id: "motor",
+            label: "Motor",
+            outputLabel: "Motor",
+            category: "E-BIKE",
+
+            inspection: [
+                "Defect",
+                "Geluid",
+                "Speling"
+            ],
+
+            actions: [
+                "Repareren",
+                "Vervangen"
+            ]
+        },
+
+        {
+            id: "remote",
+            label: "Remote",
+            outputLabel: "Remote",
+            category: "E-BIKE",
+
+            inspection: [
+                "Defect",
+                "Beschadigd"
+            ],
+
+            actions: [
+                "Repareren",
+                "Vervangen"
+            ]
+        },
+
+        {
+            id: "controller",
+            label: "Controller",
+            outputLabel: "Controller",
+            category: "E-BIKE",
+
+            inspection: [
+                "Defect"
+            ],
+
+            actions: [
+                "Repareren",
+                "Vervangen"
+            ]
+        },
+
+        {
+            id: "bedrading",
+            label: "Bedrading",
+            outputLabel: "Bedrading",
+            category: "E-BIKE",
+
+            inspection: [
+                "Beschadigd",
+                "Defect"
+            ],
+
+            actions: [
+                "Repareren",
+                "Vervangen"
+            ]
+        }
+
+    ]
+
+};
+
+
+
+/* ========================================
+   STATUS
+======================================== */
+
+const state = {};
+
+
+/*
+Hier bewaren we de tekst die de gebruiker
+zelf aan de automatisch gegenereerde tekst
+heeft toegevoegd.
+*/
+
+let manualText = "";
+
+
+/*
+Hier bewaren we de laatst gegenereerde tekst.
+Dit gebruiken we om automatisch gegenereerde
+tekst te onderscheiden van handmatige tekst.
+*/
+
+let lastGeneratedText = "";
+
+
+let ebikeEnabled =
+    bikeType === "ebike";
+
+
+const ebikeToggle =
+    document.getElementById(
+        "ebikeToggle"
+    );
+
+
+const resultText =
+    document.getElementById(
+        "resultText"
+    );
+
+
+ebikeToggle.checked =
+    ebikeEnabled;
+
+
+
+/* ========================================
+   ACTIEVE ZONES
+======================================== */
+
+function getActiveZones() {
+
+    const activeZones =
+        [...zones];
+
+
+    if (ebikeEnabled) {
+
+        activeZones.push(
+            ebikeZone
+        );
+
+    }
+
+
+    return activeZones;
+
+}
+
+
+
+/* ========================================
+   POPUP SLUITLOGICA
+======================================== */
+
+const popup =
+    document.getElementById(
+        "hotspotPopup"
+    );
+
+
+let popupCloseTimer = null;
+
+
+function cancelPopupClose() {
+
+    if (popupCloseTimer) {
+
+        clearTimeout(
+            popupCloseTimer
+        );
+
+        popupCloseTimer = null;
+
+    }
+
+}
+
+
+function schedulePopupClose() {
+
+    cancelPopupClose();
+
+
+    popupCloseTimer =
+        setTimeout(
+            () => {
+
+                popup.classList.remove(
+                    "open"
+                );
+
+                popupCloseTimer = null;
+
+            },
+
+            250
+        );
+
+}
+
+
+/*
+Als de muis de popup binnengaat,
+mag hij niet sluiten.
+*/
+
+popup.addEventListener(
+    "mouseenter",
+    () => {
+
+        cancelPopupClose();
+
+    }
+);
+
+
+/*
+Pas wanneer de muis de popup verlaat,
+start de sluitvertraging.
+*/
+
+popup.addEventListener(
+    "mouseleave",
+    () => {
+
+        schedulePopupClose();
+
+    }
+);
+
+
+
+/* ========================================
+   HOTSPOTS TONEN
+======================================== */
+
+function renderHotspots() {
+
+
+    const stage =
+        document.getElementById(
+            "bikeStage"
+        );
+
+
+    stage
+        .querySelectorAll(".hotspot")
+        .forEach(hotspot => {
+
+            hotspot.remove();
+
+        });
+
+
+
+    getActiveZones()
+        .forEach(zone => {
+
+
+            const hotspot =
+                document.createElement(
+                    "div"
+                );
+
+
+            hotspot.className =
+                "hotspot";
+
+
+            if (zone.ebike) {
+
+                hotspot.classList.add(
+                    "ebike-hotspot"
+                );
+
+            }
+
+
+            hotspot.dataset.number =
+                zone.number;
+
+
+            hotspot.dataset.id =
+                zone.id;
+
+
+            hotspot.style.left =
+                zone.x + "%";
+
+
+            hotspot.style.top =
+                zone.y + "%";
+
+
+
+            /*
+            Zodra de muis op een hotspot komt,
+            openen we de bijbehorende popup.
+            */
+
+            hotspot.addEventListener(
+                "mouseenter",
+                () => {
+
+                    cancelPopupClose();
+
+                    openPopup(
+                        zone,
+                        hotspot
+                    );
+
+                }
+            );
+
+
+
+            /*
+            Bij verlaten van de hotspot
+            begint de korte sluitvertraging.
+
+            Als de gebruiker binnen 250 ms
+            de popup bereikt, wordt deze
+            timer weer geannuleerd.
+            */
+
+            hotspot.addEventListener(
+                "mouseleave",
+                () => {
+
+                    schedulePopupClose();
+
+                }
+            );
+
+
+
+            hotspot.addEventListener(
+                "click",
+                () => {
+
+                    cancelPopupClose();
+
+                    openPopup(
+                        zone,
+                        hotspot
+                    );
+
+                }
+            );
+
+
+            stage.appendChild(
+                hotspot
+            );
+
+
+        });
+
+
+    updateHotspots();
+
+}
+
+
+
+/* ========================================
+   POPUP OPENEN
+======================================== */
+
+function openPopup(
+    zone,
+    hotspot
+) {
+
+
+    cancelPopupClose();
+
+
+    let html = `
+
+        <h3>
+            ${zone.label}
+        </h3>
+
+    `;
+
+
+
+    zone.components
+        .forEach(component => {
+
+
+            const componentState =
+                state[component.id];
+
+
+            const active =
+                Boolean(componentState);
+
+
+
+            html += `
+
+                <div
+                    class="component ${active ? "active" : ""}"
+                    data-component="${component.id}"
+                >
+
+
+                    <label class="component-main">
+
+                        <input
+                            type="checkbox"
+                            class="component-toggle"
+                            data-component="${component.id}"
+                            ${active ? "checked" : ""}
+                        >
+
+                        <span>
+                            ${component.label}
+                        </span>
+
+                    </label>
+
+
+                    <div class="component-details">
+
+
+                        <div class="choice-section">
+
+
+                            <div class="choice-title">
+                                INSPECTIE
+                            </div>
+
+
+                            <div class="choice-options">
+
+            `;
+
+
+
+            component.inspection
+                .forEach(option => {
+
+
+                    const checked =
+
+                        componentState
+                        &&
+                        componentState.inspection
+                        &&
+                        componentState.inspection.includes(
+                            option
+                        );
+
+
+                    html += `
+
+                        <label class="choice-button">
+
+                            <input
+                                type="checkbox"
+                                data-type="inspection"
+                                data-component="${component.id}"
+                                value="${option}"
+                                ${checked ? "checked" : ""}
+                            >
+
+                            <span>
+                                ${option}
+                            </span>
+
+                        </label>
+
+                    `;
+
+
+                });
+
+
+
+            html += `
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="choice-section">
+
+
+                            <div class="choice-title">
+                                UITVOEREN
+                            </div>
+
+
+                            <div class="choice-options">
+
+            `;
+
+
+
+            component.actions
+                .forEach(option => {
+
+
+                    const checked =
+
+                        componentState
+                        &&
+                        componentState.actions
+                        &&
+                        componentState.actions.includes(
+                            option
+                        );
+
+
+                    html += `
+
+                        <label class="choice-button">
+
+                            <input
+                                type="checkbox"
+                                data-type="actions"
+                                data-component="${component.id}"
+                                value="${option}"
+                                ${checked ? "checked" : ""}
+                            >
+
+                            <span>
+                                ${option}
+                            </span>
+
+                        </label>
+
+                    `;
+
+
+                });
+
+
+
+            html += `
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+            `;
+
+
+        });
+
+
+
+    popup.innerHTML =
+        html;
+
+
+    positionPopup(
+        hotspot
+    );
+
+
+    popup.classList.add(
+        "open"
+    );
+
+
+    attachPopupEvents(
+        zone,
+        hotspot
+    );
+
+}
+
+
+
+/* ========================================
+   POPUP EVENTS
+======================================== */
+
+function attachPopupEvents(
+    zone,
+    hotspot
+) {
+
+
+    /*
+    ONDERDEEL AAN / UIT
+    */
+
+    popup
+        .querySelectorAll(
+            ".component-toggle"
+        )
+        .forEach(toggle => {
+
+
+            toggle.addEventListener(
+                "change",
+                () => {
+
+
+                    cancelPopupClose();
+
+
+                    const id =
+                        toggle.dataset.component;
+
+
+
+                    if (toggle.checked) {
+
+
+                        if (!state[id]) {
+
+
+                            state[id] = {
+
+                                inspection: [],
+
+                                actions: []
+
+                            };
+
+
+                        }
+
+
+                    } else {
+
+
+                        delete state[id];
+
+
+                    }
+
+
+
+                    openPopup(
+                        zone,
+                        hotspot
+                    );
+
+
+                    updateHotspots();
+
+                    updateResultText();
+
+
+                }
+            );
+
+
+        });
+
+
+
+    /*
+    INSPECTIE EN UITVOEREN
+    */
+
+    popup
+        .querySelectorAll(
+            ".choice-button input"
+        )
+        .forEach(input => {
+
+
+            input.addEventListener(
+                "change",
+                () => {
+
+
+                    cancelPopupClose();
+
+
+                    const id =
+                        input.dataset.component;
+
+
+                    const type =
+                        input.dataset.type;
+
+
+
+                    if (!state[id]) {
+
+
+                        state[id] = {
+
+                            inspection: [],
+
+                            actions: []
+
+                        };
+
+
+                    }
+
+
+
+                    const checkedInputs =
+
+                        [
+
+                            ...popup
+                                .querySelectorAll(
+                                    ".choice-button input:checked"
+                                )
+
+                        ]
+
+                        .filter(checkbox =>
+
+                            checkbox.dataset.component === id
+
+                            &&
+
+                            checkbox.dataset.type === type
+
+                        );
+
+
+
+                    state[id][type] =
+
+                        checkedInputs
+                            .map(
+                                checkbox =>
+                                    checkbox.value
+                            );
+
+
+
+                    updateHotspots();
+
+                    updateResultText();
+
+
+                }
+            );
+
+
+        });
+
+}
+
+
+
+/* ========================================
+   POPUP POSITIONEREN
+======================================== */
+
+function positionPopup(
+    hotspot
+) {
+
+
+    const stage =
+        document.getElementById(
+            "bikeStage"
+        );
+
+
+    const stageRect =
+        stage.getBoundingClientRect();
+
+
+    const hotspotRect =
+        hotspot.getBoundingClientRect();
+
+
+
+    let left =
+
+        hotspotRect.left
+        -
+        stageRect.left
+        +
+        25;
+
+
+
+    let top =
+
+        hotspotRect.bottom
+        -
+        stageRect.top
+        +
+        10;
+
+
+
+    left = Math.max(
+
+        10,
+
+        Math.min(
+
+            left,
+
+            stageRect.width
+            -
+            370
+
+        )
+
+    );
+
+
+
+    top = Math.max(
+
+        10,
+
+        Math.min(
+
+            top,
+
+            stageRect.height
+            -
+            610
+
+        )
+
+    );
+
+
+
+    popup.style.left =
+        left + "px";
+
+
+    popup.style.top =
+        top + "px";
+
+}
+
+
+
+/* ========================================
+   HOTSPOT STATUS
+======================================== */
+
+function updateHotspots() {
+
+
+    document
+        .querySelectorAll(
+            ".hotspot"
+        )
+        .forEach(hotspot => {
+
+
+            const zone =
+
+                getActiveZones()
+                    .find(
+
+                        zone =>
+                            zone.id
+                            ===
+                            hotspot.dataset.id
+
+                    );
+
+
+
+            if (!zone) {
+                return;
+            }
+
+
+
+            const hasSelection =
+
+                zone.components
+                    .some(
+
+                        component =>
+                            Boolean(
+                                state[
+                                    component.id
+                                ]
+                            )
+
+                    );
+
+
+
+            hotspot
+                .classList
+                .toggle(
+
+                    "selected",
+
+                    hasSelection
+
+                );
+
+
+        });
+
+}
+
+
+
+/* ========================================
+   ALLE COMPONENTEN
+======================================== */
+
+function getAllComponents() {
+
+
+    return [
+
+        ...zones,
+
+        ebikeZone
+
+    ]
+
+        .flatMap(
+
+            zone =>
+                zone.components
+
+        );
+
+}
+
+
+
+/* ========================================
+   AUTOMATISCHE TEKST GENEREREN
+======================================== */
+
+function generateAutomaticText() {
+
+
+    const categories = {};
+
+
+    const allComponents =
+        getAllComponents();
+
+
+
+    allComponents
+        .forEach(component => {
+
+
+            const componentState =
+                state[component.id];
+
+
+
+            if (!componentState) {
+                return;
+            }
+
+
+
+            const inspection =
+                componentState.inspection || [];
+
+
+            const actions =
+                componentState.actions || [];
+
+
+
+            if (
+
+                inspection.length === 0
+                &&
+                actions.length === 0
+
+            ) {
+
+                return;
+
+            }
+
+
+
+            let text =
+                component.outputLabel;
+
+
+
+            /*
+            INSPECTIE
+            */
+
+            if (inspection.length > 0) {
+
+
+                text +=
+
+                    " " +
+
+                    inspection
+                        .join(", ")
+                        .toLowerCase();
+
+
+            }
+
+
+
+            /*
+            UITVOEREN
+            */
+
+            if (actions.length > 0) {
+
+
+                if (inspection.length > 0) {
+
+
+                    text +=
+
+                        " - " +
+
+                        actions
+                            .join(", ")
+                            .toLowerCase();
+
+
+                }
+
+
+                else if (
+
+                    actions.includes(
+                        "Vervangen"
+                    )
+
+                ) {
+
+
+                    text +=
+
+                        " niet versleten, wel vervangen";
+
+
+                }
+
+
+                else {
+
+
+                    text +=
+
+                        " - " +
+
+                        actions
+                            .join(", ")
+                            .toLowerCase();
+
+
+                }
+
+
+            }
+
+
+
+            if (
+
+                !categories[
+                    component.category
+                ]
+
+            ) {
+
+
+                categories[
+                    component.category
+                ] = [];
+
+
+            }
+
+
+
+            categories[
+                component.category
+            ]
+                .push(
+                    text
+                );
+
+
+        });
+
+
+
+    const categoryOrder = [
+
+        "WIELEN",
+
+        "REMMEN",
+
+        "AANDRIJVING",
+
+        "FRAME",
+
+        "STUURINRICHTING",
+
+        "SCHAKELEN",
+
+        "E-BIKE"
+
+    ];
+
+
+
+    const output = [];
+
+
+
+    categoryOrder
+        .forEach(category => {
+
+
+            if (
+
+                !categories[
+                    category
+                ]
+
+            ) {
+
+                return;
+
+            }
+
+
+
+            output.push(
+                category
+            );
+
+
+
+            categories[
+                category
+            ]
+                .forEach(line => {
+
+
+                    output.push(
+                        line
+                    );
+
+
+                });
+
+
+
+            output.push(
+                ""
+            );
+
+
+        });
+
+
+
+    return output
+        .join("\n")
+        .trim();
+
+}
+
+
+
+/* ========================================
+   RESULTAATTEKST BIJWERKEN
+======================================== */
+
+function updateResultText() {
+
+
+    const generatedText =
+        generateAutomaticText();
+
+
+    lastGeneratedText =
+        generatedText;
+
+
+
+    let combinedText =
+        generatedText;
+
+
+
+    if (manualText.trim()) {
+
+
+        if (combinedText) {
+
+            combinedText +=
+                "\n\n";
+
+        }
+
+
+        combinedText +=
+            manualText;
+
+    }
+
+
+
+    resultText.value =
+        combinedText;
+
+}
+
+
+
+/* ========================================
+   HANDMATIGE TEKST BEWAREN
+
+   Wanneer de gebruiker in het tekstvak typt,
+   proberen we het automatisch gegenereerde
+   gedeelte te scheiden van de handmatige
+   toevoeging.
+======================================== */
+
+resultText.addEventListener(
+    "input",
+    () => {
+
+
+        const currentValue =
+            resultText.value;
+
+
+
+        if (
+
+            lastGeneratedText
+
+            &&
+
+            currentValue.startsWith(
+                lastGeneratedText
+            )
+
+        ) {
+
+
+            manualText =
+
+                currentValue
+                    .slice(
+                        lastGeneratedText.length
+                    )
+                    .replace(
+                        /^\s+/,
+                        ""
+                    );
+
+
+        }
+
+
+        else if (
+
+            !lastGeneratedText
+
+        ) {
+
+
+            manualText =
+                currentValue;
+
+
+        }
+
+
+        else {
+
+
+            /*
+            Als de gebruiker ook de automatisch
+            gegenereerde tekst zelf bewerkt,
+            behandelen we vanaf dat moment de
+            volledige inhoud als handmatige tekst.
+
+            Hierdoor gaat de invoer niet verloren.
+            */
+
+            manualText =
+                currentValue;
+
+
+            lastGeneratedText =
+                "";
+
+        }
+
+
+    }
+);
+
+
+
+/* ========================================
+   E-BIKE TOGGLE
+======================================== */
+
+ebikeToggle
+    .addEventListener(
+        "change",
+        () => {
+
+
+            ebikeEnabled =
+                ebikeToggle.checked;
+
+
+            popup
+                .classList
+                .remove(
+                    "open"
+                );
+
+
+            renderHotspots();
+
+            updateResultText();
+
+
+        }
+    );
+
+
+
+/* ========================================
+   KOPIEER ALLES
+======================================== */
+
+document
+    .getElementById(
+        "copyButton"
+    )
+    .addEventListener(
+        "click",
+        async () => {
+
+
+            if (!resultText.value) {
+                return;
+            }
+
+
+            try {
+
+
+                await navigator
+                    .clipboard
+                    .writeText(
+                        resultText.value
+                    );
+
+
+                const button =
+                    document.getElementById(
+                        "copyButton"
+                    );
+
+
+                button.textContent =
+                    "Gekopieerd!";
+
+
+                setTimeout(
+
+                    () => {
+
+                        button.textContent =
+                            "Kopieer alles";
+
+                    },
+
+                    1200
+
+                );
+
+
+            }
+
+
+            catch {
+
+
+                resultText.select();
+
+
+                document.execCommand(
+                    "copy"
+                );
+
+
+            }
+
+
+        }
+    );
+
+
+
+/* ========================================
+   RESET
+======================================== */
+
+document
+    .getElementById(
+        "resetButton"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+
+            Object
+                .keys(
+                    state
+                )
+                .forEach(
+
+                    key =>
+                        delete state[key]
+
+                );
+
+
+            manualText =
+                "";
+
+
+            lastGeneratedText =
+                "";
+
+
+            popup
+                .classList
+                .remove(
+                    "open"
+                );
+
+
+            updateHotspots();
+
+            updateResultText();
+
+
+        }
+    );
+
+
+
+/* ========================================
+   START
+======================================== */
+
+renderHotspots();
+
+updateResultText();
+
+
+</script>
+
+
+</body>
+</html>
