@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kies fietsmodel</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffffff;
+    color: #171717;
+}
+
+
+/* ========================================
+   PAGINA
+======================================== */
+
+.page {
+    width: 100%;
+    min-height: 100vh;
+    padding: 48px 70px 35px;
+}
+
+
+/* ========================================
+   HEADER
+======================================== */
+
+.page-header {
+    width: 100%;
+    max-width: 1380px;
+    margin: 0 auto 36px;
+}
+
+h1 {
+    margin: 0 0 12px;
+    font-size: 36px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.subtitle {
+    margin: 0;
+    font-size: 17px;
+    color: #686868;
+}
+
+
+/* ========================================
+   FIETS GRID
+======================================== */
+
+.bike-grid {
+    width: 100%;
+    max-width: 1380px;
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+}
+
+
+/* ========================================
+   FIETS KNOPPEN
+======================================== */
+
+.bike-card {
+    height: 315px;
+
+    background: #eaeaea;
+
+    border: 1px solid #cccccc;
+    border-radius: 16px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 18px;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        transform 0.15s ease;
+}
+
+.bike-card:hover {
+    background: #eaeaea;
+    border-color: #999999;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 24px
+        rgba(0, 0, 0, 0.08);
+}
+
+.bike-card:active {
+    transform: translateY(0);
+}
+
+
+/* ========================================
+   FIETSAFBEELDING
+======================================== */
+
+.bike-image {
+    width: 100%;
+    height: 225px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bike-image img {
+    width: 100%;
+    height: 100%;
+    max-width: 360px;
+
+    object-fit: contain;
+}
+
+
+/* ========================================
+   NAAM FIETSTYPE
+======================================== */
+
+.bike-name {
+    margin-top: 8px;
+
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+
+    text-align: center;
+}
+
+
+/* ========================================
+   ONDERSTE INFORMATIE
+======================================== */
+
+.footer-info {
+    width: 100%;
+    max-width: 1380px;
+
+    margin: 28px auto 0;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    color: #686868;
+    font-size: 15px;
+}
+
+.info-icon {
+    width: 30px;
+    height: 30px;
+
+    border: 1px solid #cccccc;
+    border-radius: 7px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 17px;
+
+    background: #eaeaea;
+}
+
+
+/* ========================================
+   1920 x 1200 CHROME
+======================================== */
+
+@media
+(min-width: 1400px)
+and (min-height: 900px) {
+
+    html,
+    body {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .page {
+        height: 100vh;
+    }
+}
+
+
+/* ========================================
+   KLEINERE SCHERMEN
+======================================== */
+
+@media (max-width: 900px) {
+
+    .bike-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .page {
+        padding: 30px 20px;
+    }
+
+    .bike-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="page">
+
+
+    <!-- HEADER -->
+
+    <header class="page-header">
+
+        <h1>KIES FIETSMODEL</h1>
+
+        <p class="subtitle">
+            Selecteer het type fiets om de M-inspectie te starten.
+        </p>
+
+    </header>
+
+
+
+    <!-- FIETSMODELLEN -->
+
+    <main class="bike-grid">
+
+
+        <!-- RACE / GRAVEL -->
+
+        <div
+            class="bike-card"
+            onclick="selectBike('race')"
+        >
+
+            <div class="bike-image">
+
+                <img
+                    src="images/racegravel.png"
+                    alt="Race / Gravel"
+                >
+
+            </div>
+
+            <div class="bike-name">
+                RACE / GRAVEL
+            </div>
+
+        </div>
+
+
+
+        <!-- MTB -->
+
+        <div
+            class="bike-card"
+            onclick="selectBike('mtb')"
+        >
+
+            <div class="bike-image">
+
+                <img
+                    src="images/mtb.png"
+                    alt="Mountainbike"
+                >
+
+            </div>
+
+            <div class="bike-name">
+                MTB
+            </div>
+
+        </div>
+
+
+
+        <!-- DUTCH / CITY -->
+
+        <div
+            class="bike-card"
+            onclick="selectBike('city')"
+        >
+
+            <div class="bike-image">
+
+                <img
+                    src="images/city.png"
+                    alt="Nederlandse stadsfiets"
+                >
+
+            </div>
+
+            <div class="bike-name">
+                DUTCH / CITY
+            </div>
+
+        </div>
+
+
+
+        <!-- E-BIKE -->
+
+        <div
+            class="bike-card"
+            onclick="selectBike('ebike')"
+        >
+
+            <div class="bike-image">
+
+                <img
+                    src="images/ebike.png"
+                    alt="Elektrische fiets"
+                >
+
+            </div>
+
+            <div class="bike-name">
+                E-BIKE
+            </div>
+
+        </div>
+
+
+
+        <!-- OVERIG -->
+
+        <div
+            class="bike-card"
+            onclick="selectBike('other')"
+        >
+
+            <div class="bike-image">
+
+                <img
+                    src="images/overig.png"
+                    alt="Overig fietstype"
+                >
+
+            </div>
+
+            <div class="bike-name">
+                OVERIG
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- INFORMATIE ONDERAAN -->
+
+    <div class="footer-info">
+
+        <div class="info-icon">
+            i
+        </div>
+
+        <span>
+            Niet zeker welk type? Kies het model dat het meest overeenkomt.
+        </span>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+function selectBike(type) {
+
+    window.location.href =
+        "inspectie.html?type=" +
+        encodeURIComponent(type);
+
+}
+
+</script>
+
+
+</body>
+</html>
