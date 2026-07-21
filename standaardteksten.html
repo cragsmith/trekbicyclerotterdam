@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Standaard Teksten Werkplaats</title>
 <link rel="icon" type="image/png" href="favicon.png">
-<!-- VERSION 3.10d - aligned action buttons -->
+<!-- VERSION 3.10e - white service controls, preview -25px -->
 
 <style>
 body {
@@ -87,7 +87,18 @@ body {
 
 
 
-.extra-options{width:330px;background:white;color:#423b30;padding:15px;border:1px solid #bbb;border-radius:4px;box-sizing:border-box;font-size:14px;line-height:1.4}
+.extra-options{
+width:330px;
+background:white;
+color:#423b30;
+padding:15px;
+border:1px solid #bbb;
+border-radius: 4px;
+box-sizing:border-box;
+font-size:14px;
+line-height:1.4
+}
+
 .extra-options-title{font-weight:bold;font-size:15px;margin-bottom:16px}
 .extra-section{margin-top:16px}
 .extra-section-title{font-weight:bold;margin-bottom:0px}
@@ -391,6 +402,25 @@ body {
     margin-top: auto;
 }
 
+
+/* v3.10e — witte initialen/datum-balk en preview 25px lager */
+.service-controls {
+    background: #fff !important;
+    color: #111 !important;
+    border-color: var(--border) !important;
+}
+.service-controls span {
+    color: #111 !important;
+}
+
+#previewBlock {
+    height: 503px !important;
+    min-height: 503px !important;
+}
+.workorder-inner > .left-column .card {
+    grid-template-rows: 503px 36px !important;
+}
+
 </style>
 </head>
 
@@ -398,8 +428,8 @@ body {
 
 <div class="header">
 <img class="header-logo" src="images/shieldlogo.png" alt="Trek shield">
-<div class="title">Standaard Teksten Werkplaats</div>
 <div class="subtitle">TREK ROTTERDAM</div>
+
 </div>
 
 <div class="page">
