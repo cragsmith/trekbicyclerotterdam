@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -6,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Standaard Teksten Werkplaats</title>
 <link rel="icon" type="image/png" href="favicon.png">
-<!-- VERSION 3.10f - standaard regel extra werkzaamheden bij servicebeurt -->
+<!-- VERSION 3.11 - klantcommunicatie: afspraakbevestiging / vertraging -->
 
 <style>
 body {
@@ -422,6 +423,31 @@ body {
     grid-template-rows: 503px 36px !important;
 }
 
+
+/* v3.11 — keuze klantcommunicatie */
+.message-selector {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 14px;
+}
+.message-selector label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.message-selector input {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    accent-color: var(--red);
+}
+
 </style>
 </head>
 
@@ -521,8 +547,12 @@ body {
 
 <div class="card">
 <div class="email-form" id="emailForm">
+<div class="message-selector">
+<label><input type="radio" name="messageType" value="appointment" checked onchange="switchMessageType()"><span>Afspraakbevestiging</span></label>
+<label><input type="radio" name="messageType" value="delay" onchange="switchMessageType()"><span>Vertraging gepland onderhoud</span></label>
+</div>
 <input id="voornaam" placeholder="Voornaam klant" oninput="updateEmail()">
-<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+<div id="appointmentDateControls" style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
 <input type="date" id="datum" oninput="updateEmail()" style="margin-bottom:0;flex:1;">
 <button type="button" style="width:140px;height:36px;margin-top:0;border-radius:4px;font-size:14px;" onclick="openDatePicker()">📅 Kies datum</button>
 </div>
@@ -777,8 +807,52 @@ function loadServiceSettings() {
     updatePreview();
 }
 
+function getMessageType() {
+    const selected = document.querySelector('input[name="messageType"]:checked');
+    return selected ? selected.value : "appointment";
+}
+
+function switchMessageType() {
+    const type = getMessageType();
+    document.getElementById("appointmentDateControls").style.display =
+        type === "appointment" ? "flex" : "none";
+    updateEmail();
+}
+
+function getEmailSignatureHtml() {
+    return `<div class="email-signature">
+Adres:&nbsp;&nbsp;Jonker Fransstraat 91-93, 3031 AP Rotterdam<br>
+Tel.nr:&nbsp;&nbsp;&nbsp;010 - 899 0765<br>
+Mail:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rotterdam@trekbikes.com<br>
+<br>
+Openingstijden:<br>
+Dinsdag t/m vrijdag : 9.30-18.00<br>
+Zaterdag: 9.00-17.00
+</div>`;
+}
+
 function updateEmail() {
     const voornaam = document.getElementById("voornaam").value;
+    const type = getMessageType();
+
+    if (type === "delay") {
+        document.getElementById("emailText").innerHTML =
+`<div><strong>Trek Rotterdam - Vertraging gepland onderhoud</strong></div>
+<br>
+<div>Beste ${voornaam},</div>
+<br>
+<div>Vandaag staat je fiets bij ons ingepland voor reparatie. Helaas lukt het ons niet om de reparatie vandaag af te ronden zoals gepland.</div><br>
+<div>Niet alle benodigde vervangingsonderdelen zijn op voorraad. Deze zijn al besteld, maar we wachten nog op de levering. Zodra de onderdelen binnen zijn, kunnen we de reparatie verder afronden.</div><br>
+<div>Onze excuses voor de vertraging en het ongemak. Bedankt voor je begrip.</div>
+<br>
+<div>Met sportieve groet!</div>
+<br>
+<div>Team Trek Bicycle Rotterdam</div>
+<br>
+${getEmailSignatureHtml()}`;
+        return;
+    }
+
     const datum = formatDutchDate(document.getElementById("datum").value);
 
     document.getElementById("emailText").innerHTML =
@@ -792,15 +866,7 @@ function updateEmail() {
 <br>
 <div>Team Trek Bicycle Rotterdam</div>
 <br>
-<div class="email-signature">
-Adres:&nbsp;&nbsp;Jonker Fransstraat 91-93, 3031 AP Rotterdam<br>
-Tel.nr:&nbsp;&nbsp;&nbsp;010 - 899 0765<br>
-Mail:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rotterdam@trekbikes.com<br>
-<br>
-Openingstijden:<br>
-Dinsdag t/m vrijdag : 9.30-18.00<br>
-Zaterdag: 9.00-17.00
-</div>`;
+${getEmailSignatureHtml()}`;
 }
 
 function getPlainTextFromHtml(html) {
@@ -891,7 +957,7 @@ document.querySelectorAll(".extra-options input[type=\'checkbox\']").forEach(opt
 });
 updateExtraWork();
 
-updateEmail();
+switchMessageType();
 </script>
 
 </body>
