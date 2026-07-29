@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -5,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Standaard Teksten Werkplaats</title>
 <link rel="icon" type="image/png" href="favicon.png">
-<!-- VERSION 3.10e - white service controls, preview -25px -->
+<!-- VERSION 3.10f - standaard regel extra werkzaamheden bij servicebeurt -->
 
 <style>
 body {
@@ -735,9 +736,16 @@ function updatePreview() {
     }
 
     const extraLines = getExtraWorkLines();
+    const serviceSelected =
+        document.getElementById("serviceLevel1").checked ||
+        document.getElementById("serviceLevel2").checked;
+
     if (extraLines.length) {
         previewText += (previewText ? "\n\n" : "") + `Extra werkzaamheden of aandachtspunten:
 ${extraLines.join("\n")}`;
+    } else if (serviceSelected) {
+        previewText += (previewText ? "\n\n" : "") + `Extra werkzaamheden of aandachtspunten:
+- `;
     }
 
     preview.innerText = previewText;
