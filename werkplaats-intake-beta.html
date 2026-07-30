@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Werkplaats Intake Beta</title>
+<style>
+:root{--red:#e2231a;--black:#111;--bg:#f2f2f2;--panel:#fff;--border:#d1d1d1;--muted:#666}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--black)}
+header{background:#111;border-bottom:5px solid var(--red);color:#fff;padding:18px 28px 16px}header h1{margin:0;font-size:26px;letter-spacing:1.2px}header p{margin:5px 0 0;color:#ccc;font-size:13px}
+.page{max-width:1500px;margin:0 auto;padding:22px;display:grid;grid-template-columns:minmax(720px,1fr) 420px;gap:20px}.intake{display:grid;gap:14px}.section{background:#fff;border:1px solid var(--border);border-radius:6px;overflow:hidden}.section-title{background:#262626;color:#fff;padding:8px 12px;font-size:12px;font-weight:800;letter-spacing:1.4px}.section-body{padding:12px}.row{display:grid;grid-template-columns:170px 1fr;gap:12px;align-items:start;padding:7px 0;border-bottom:1px solid #eee}.row:last-child{border-bottom:0}.label{font-weight:700;font-size:14px;padding-top:2px}.options{display:flex;flex-wrap:wrap;gap:7px 14px;align-items:center}.option{display:inline-flex;align-items:center;gap:5px;font-size:14px;cursor:pointer;white-space:nowrap}input[type="checkbox"],input[type="radio"]{accent-color:var(--red)}.small-input{width:86px;height:28px;padding:4px 7px;border:1px solid #bbb;border-radius:4px;font-size:14px}.chainring-detail{display:none;margin-top:7px}.subrow{display:grid;grid-template-columns:120px 1fr;gap:8px;width:100%}.subrow+.subrow{margin-top:7px}.sub-label{color:var(--muted);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding-top:3px}.va-grid{display:grid;grid-template-columns:minmax(220px,1fr) 42px 42px;gap:7px 8px;align-items:center;font-size:14px}.va-grid .head{text-align:center;font-size:12px;font-weight:800}.va-grid input{justify-self:center}.preview-card{position:sticky;top:16px;align-self:start;background:#e9e9e9;border:1px solid #c9c9c9;border-radius:7px;overflow:hidden}.preview-title{background:#111;color:#fff;padding:9px 12px;font-size:12px;font-weight:800;letter-spacing:1.3px}#preview{display:block;width:100%;min-height:700px;resize:vertical;border:0;border-bottom:1px solid var(--border);padding:14px;font:14px/1.5 Arial,Helvetica,sans-serif;color:#111;background:#fff;outline:none}.preview-actions{display:grid;grid-template-columns:1fr 1fr}button{height:38px;border:0;background:#111;color:#fff;font-weight:700;cursor:pointer}button+button{border-left:1px solid #444}button:hover{background:var(--red)}@media(max-width:1050px){.page{grid-template-columns:1fr}.preview-card{position:static}}
+</style>
+</head>
+<body>
+<header><h1>WERKPLAATS INTAKE — BETA</h1><p>Alleen afwijkingen en gekozen werkzaamheden noteren.</p></header>
+<div class="page">
+<div class="intake">
+<section class="section"><div class="section-title">SERVICEPAKKET</div><div class="section-body">
+<div class="row"><div class="label">Servicebeurt</div><div class="options"><label class="option"><input type="radio" name="service" value="SP1"> SP1</label><label class="option"><input type="radio" name="service" value="SP2"> SP2</label></div></div>
+<div class="row"><div class="label">Balhoofd</div><div class="options"><label class="option"><input type="checkbox" id="headsetPlay"> Speling</label><label class="option"><input type="radio" name="headsetAction" value="verhelpen"> Verhelpen</label><label class="option"><input type="radio" name="headsetAction" value="vervangen"> Vervangen</label></div></div>
+</div></section>
+<section class="section"><div class="section-title">AANDRIJFLIJN</div><div class="section-body">
+<div class="row"><div class="label">Ketting</div><div><div class="subrow"><div class="sub-label">Speed</div><div class="options">
+<label class="option"><input type="radio" name="chainSpeed" value="7s">7s</label><label class="option"><input type="radio" name="chainSpeed" value="8s">8s</label><label class="option"><input type="radio" name="chainSpeed" value="9s">9s</label><label class="option"><input type="radio" name="chainSpeed" value="10s">10s</label><label class="option"><input type="radio" name="chainSpeed" value="11s">11s</label><label class="option"><input type="radio" name="chainSpeed" value="12s">12s</label><label class="option"><input type="radio" name="chainSpeed" value="13s">13s</label></div></div>
+<div class="subrow"><div class="sub-label">Slijtage</div><div class="options"><label class="option"><input type="radio" name="chainWear" value="<0,5%">&lt;0,5%</label><label class="option"><input type="radio" name="chainWear" value="0,5%">0,5%</label><label class="option"><input type="radio" name="chainWear" value="0,75%">0,75%</label><label class="option"><input type="radio" name="chainWear" value="1,0%+">1,0%+</label></div></div>
+<div class="subrow"><div class="sub-label">Uitvoeren</div><div class="options"><label class="option"><input type="radio" name="chainAction" value="opspannen">Opspannen</label><label class="option"><input type="radio" name="chainAction" value="vervangen">Vervangen</label></div></div></div></div>
+<div class="row"><div class="label">Cassette</div><div>
+<div class="options">
+<label class="option"><input type="checkbox" id="cassetteWear">Versleten</label>
+<label class="option"><input type="checkbox" id="cassetteReplace">Vervangen</label>
+<label class="option">Ratio <input class="small-input" type="text" id="cassetteRatio" placeholder="11-32" inputmode="text"></label>
+</div>
+</div></div>
+<div class="row"><div class="label">Kettingblad</div><div>
+<div class="subrow">
+<div class="sub-label">Configuratie</div>
+<div class="options">
+<label class="option"><input type="radio" name="chainringSetup" value="1x">1x</label>
+<label class="option"><input type="radio" name="chainringSetup" value="2x">2x</label>
+<label class="option"><input type="radio" name="chainringSetup" value="3x">3x</label>
+</div>
+</div>
+
+<div class="subrow">
+<div class="sub-label">Status</div>
+<div class="options">
+<label class="option"><input type="checkbox" id="chainringWear">Versleten</label>
+<label class="option"><input type="checkbox" id="chainringReplace">Vervangen</label>
+</div>
+</div>
+
+<div class="subrow chainring-detail" id="chainringPositionRow">
+<div class="sub-label">Blad</div>
+<div class="options" id="chainringPositionOptions"></div>
+</div>
+</div></div>
+<div class="row"><div class="label">Derailleurwieltjes</div><div class="options"><label class="option"><input type="checkbox" id="pulleyWear">Versleten</label><label class="option"><input type="checkbox" id="pulleyReplace">Vervangen</label></div></div>
+<div class="row"><div class="label">Trapas</div><div><div class="options"><label class="option"><input type="checkbox" id="bbPlay">Speling</label><label class="option"><input type="checkbox" id="bbCreak">Kraakt</label><label class="option"><input type="checkbox" id="bbWear">Versleten</label></div><div class="options" style="margin-top:7px"><label class="option"><input type="radio" name="bbAction" value="afstellen">Afstellen / vastzetten</label><label class="option"><input type="radio" name="bbAction" value="vervangen">Vervangen</label></div></div></div>
+</div></section>
+<section class="section"><div class="section-title">REMMEN</div><div class="section-body"><div class="va-grid"><div></div><div class="head">V</div><div class="head">A</div>
+<div>Remleiding ontluchten</div><input type="checkbox" id="bleedV"><input type="checkbox" id="bleedA">
+<div>Remblokken vervangen</div><input type="checkbox" id="padsV"><input type="checkbox" id="padsA">
+<div>Remschijf richten</div><input type="checkbox" id="discTrueV"><input type="checkbox" id="discTrueA">
+<div>Remschijf vervangen</div><input type="checkbox" id="discReplaceV"><input type="checkbox" id="discReplaceA">
+<div>Remklauw uitlijnen</div><input type="checkbox" id="caliperAlignV"><input type="checkbox" id="caliperAlignA">
+<div>Remklauw reinigen</div><input type="checkbox" id="caliperCleanV"><input type="checkbox" id="caliperCleanA">
+<div>SRAM remklauw service</div><input type="checkbox" id="sramV"><input type="checkbox" id="sramA">
+</div></div></section>
+<section class="section"><div class="section-title">WIELEN</div><div class="section-body"><div class="va-grid"><div></div><div class="head">V</div><div class="head">A</div>
+<div>Naaf speling / slijtage</div><input type="checkbox" id="hubIssueV"><input type="checkbox" id="hubIssueA">
+<div>Naaf reviseren</div><input type="checkbox" id="hubServiceV"><input type="checkbox" id="hubServiceA">
+<div>Wiel slag</div><input type="checkbox" id="wheelWobbleV"><input type="checkbox" id="wheelWobbleA">
+<div>Spaak / spaken kapot</div><input type="checkbox" id="spokesV"><input type="checkbox" id="spokesA">
+<div>Wiel richten</div><input type="checkbox" id="wheelTrueV"><input type="checkbox" id="wheelTrueA">
+<div>──────── BANDEN ────────</div><div></div><div></div>
+<div>Binnenband lek / poreus</div><input type="checkbox" id="tubeIssueV"><input type="checkbox" id="tubeIssueA">
+<div>Binnenband vervangen</div><input type="checkbox" id="tubeReplaceV"><input type="checkbox" id="tubeReplaceA">
+<div>Buitenband slijtage</div><input type="checkbox" id="tireWearV"><input type="checkbox" id="tireWearA">
+<div>Buitenband scheef</div><input type="checkbox" id="tireCrookedV"><input type="checkbox" id="tireCrookedA">
+<div>Buitenband rechtleggen</div><input type="checkbox" id="tireStraightenV"><input type="checkbox" id="tireStraightenA">
+<div>Buitenband vervangen</div><input type="checkbox" id="tireReplaceV"><input type="checkbox" id="tireReplaceA">
+</div></div></section>
+<section class="section"><div class="section-title">ACCESSOIRES</div><div class="section-body"><div class="va-grid"><div></div><div class="head">V</div><div class="head">A</div>
+<div>Spatbord los / scheef</div><input type="checkbox" id="fenderIssueV"><input type="checkbox" id="fenderIssueA">
+<div>Spatbord vastzetten / uitlijnen</div><input type="checkbox" id="fenderFixV"><input type="checkbox" id="fenderFixA">
+<div>Spatbord vervangen</div><input type="checkbox" id="fenderReplaceV"><input type="checkbox" id="fenderReplaceA">
+<div>Verlichting defect</div><input type="checkbox" id="lightIssueV"><input type="checkbox" id="lightIssueA">
+<div>Verlichting vervangen</div><input type="checkbox" id="lightReplaceV"><input type="checkbox" id="lightReplaceA">
+</div></div></section>
+</div>
+<aside class="preview-card"><div class="preview-title">PREVIEW</div><textarea id="preview" placeholder="Selecties verschijnen hier. Je kunt de tekst ook handmatig aanpassen."></textarea><div class="preview-actions"><button id="copyBtn">Kopieer alles</button><button id="resetBtn">Reset</button></div></aside>
+</div>
+<script>
+const $=id=>document.getElementById(id);const checked=id=>$(id)?.checked===true;const radio=name=>document.querySelector(`input[name="${name}"]:checked`)?.value||"";let lastGenerated="";let manualOverride=false;
+function sideText(v,a,vText,aText,bothText){if(v&&a)return bothText;if(v)return vText;if(a)return aText;return""}
+function addSection(out,title,lines){if(!lines.length)return;out.push(title);lines.forEach(line=>out.push(`- ${line}`));out.push("")}
+function generateText(){const out=[];const service=[];const serviceLevel=radio("service");if(serviceLevel)service.push(`Servicebeurt ${serviceLevel}`);const headsetPlay=checked("headsetPlay"),headsetAction=radio("headsetAction");if(headsetPlay||headsetAction){if(headsetPlay&&headsetAction==="verhelpen")service.push("Speling balhoofd verhelpen");else if(headsetPlay&&headsetAction==="vervangen")service.push("Balhoofd heeft speling, vervangen");else if(headsetPlay)service.push("Speling balhoofd");else if(headsetAction==="verhelpen")service.push("Balhoofd afstellen");else if(headsetAction==="vervangen")service.push("Balhoofd vervangen")}addSection(out,"SERVICEPAKKET",service);
+const drive=[];const speed=radio("chainSpeed"),wear=radio("chainWear"),chainAction=radio("chainAction");if(speed||wear||chainAction){let parts=["Ketting"];if(speed)parts.push(speed);if(wear)parts.push(`slijtage ${wear}`);if(chainAction==="opspannen")parts.push("opspannen");if(chainAction==="vervangen")parts.push("vervangen");drive.push(parts.join(", "))}
+if(checked("cassetteWear")||checked("cassetteReplace"))drive.push(checked("cassetteWear")&&checked("cassetteReplace")?"Cassette versleten, vervangen":checked("cassetteWear")?"Cassette versleten":"Cassette vervangen");
+if(checked("chainringWear")||checked("chainringReplace"))drive.push(checked("chainringWear")&&checked("chainringReplace")?"Kettingblad versleten, vervangen":checked("chainringWear")?"Kettingblad versleten":"Kettingblad vervangen");
+if(checked("pulleyWear")||checked("pulleyReplace"))drive.push(checked("pulleyWear")&&checked("pulleyReplace")?"Derailleurwieltjes versleten, vervangen":checked("pulleyWear")?"Derailleurwieltjes versleten":"Derailleurwieltjes vervangen");
+const bbAction=radio("bbAction");if(checked("bbPlay")||checked("bbCreak")||bbAction){const states=[];if(checked("bbPlay"))states.push("speling");if(checked("bbCreak"))states.push("kraakt");let t="Trapas";if(states.length)t+=` ${states.join(", ")}`;if(bbAction==="afstellen")t+=", afstellen / vastzetten";if(bbAction==="vervangen")t+=", vervangen";drive.push(t)}addSection(out,"AANDRIJFLIJN",drive);
+const brakes=[];[["bleed","Remleiding voor ontluchten","Remleiding achter ontluchten","Remleiding voor en achter ontluchten"],["pads","Remblokken voor vervangen","Remblokken achter vervangen","Remblokken voor en achter vervangen"],["discTrue","Remschijf voor richten","Remschijf achter richten","Remschijf voor en achter richten"],["discReplace","Remschijf voor vervangen","Remschijf achter vervangen","Remschijf voor en achter vervangen"],["caliperAlign","Remklauw voor uitlijnen","Remklauw achter uitlijnen","Remklauw voor en achter uitlijnen"],["caliperClean","Remklauw voor reinigen","Remklauw achter reinigen","Remklauw voor en achter reinigen"],["sram","SRAM remklauw service voor","SRAM remklauw service achter","SRAM remklauw service voor en achter"]].forEach(([id,v,a,b])=>{const t=sideText(checked(id+"V"),checked(id+"A"),v,a,b);if(t)brakes.push(t)});addSection(out,"REMMEN",brakes);
+const wheels=[];[["hubIssue","Speling/slijtage voornaaf","Speling/slijtage achternaaf","Speling/slijtage voor- en achternaaf"],["hubService","Voornaaf reviseren","Achternaaf reviseren","Voor- en achternaaf reviseren"],["wheelWobble","Slag in voorwiel","Slag in achterwiel","Slag in voor- en achterwiel"],["spokes","Spaak/spaken voorwiel kapot","Spaak/spaken achterwiel kapot","Spaak/spaken voor- en achterwiel kapot"],["wheelTrue","Voorwiel richten","Achterwiel richten","Voor- en achterwiel richten"],["tubeIssue","Binnenband voor lek/poreus","Binnenband achter lek/poreus","Binnenband voor en achter lek/poreus"],["tubeReplace","Binnenband voor vervangen","Binnenband achter vervangen","Binnenband voor en achter vervangen"],["tireWear","Buitenband voor versleten","Buitenband achter versleten","Buitenband voor en achter versleten"],["tireCrooked","Buitenband voor scheef","Buitenband achter scheef","Buitenband voor en achter scheef"],["tireStraighten","Buitenband voor rechtleggen","Buitenband achter rechtleggen","Buitenband voor en achter rechtleggen"],["tireReplace","Buitenband voor vervangen","Buitenband achter vervangen","Buitenband voor en achter vervangen"]].forEach(([id,v,a,b])=>{const t=sideText(checked(id+"V"),checked(id+"A"),v,a,b);if(t)wheels.push(t)});addSection(out,"WIELEN",wheels);
+const acc=[];[["fenderIssue","Spatbord voor los/scheef","Spatbord achter los/scheef","Spatbord voor en achter los/scheef"],["fenderFix","Spatbord voor vastzetten/uitlijnen","Spatbord achter vastzetten/uitlijnen","Spatbord voor en achter vastzetten/uitlijnen"],["fenderReplace","Spatbord voor vervangen","Spatbord achter vervangen","Spatbord voor en achter vervangen"],["lightIssue","Verlichting voor defect","Verlichting achter defect","Verlichting voor en achter defect"],["lightReplace","Verlichting voor vervangen","Verlichting achter vervangen","Verlichting voor en achter vervangen"]].forEach(([id,v,a,b])=>{const t=sideText(checked(id+"V"),checked(id+"A"),v,a,b);if(t)acc.push(t)});addSection(out,"ACCESSOIRES",acc);return out.join("\n").trim()}
+function updatePreview(){const generated=generateText();if(!manualOverride||$("preview").value===lastGenerated){$("preview").value=generated;manualOverride=false}lastGenerated=generated}
+document.querySelectorAll("input").forEach(input=>{input.addEventListener("change",()=>{if(input.id==="discTrueV"&&input.checked)$("discReplaceV").checked=false;if(input.id==="discReplaceV"&&input.checked)$("discTrueV").checked=false;if(input.id==="discTrueA"&&input.checked)$("discReplaceA").checked=false;if(input.id==="discReplaceA"&&input.checked)$("discTrueA").checked=false;if(input.id==="tireStraightenV"&&input.checked)$("tireReplaceV").checked=false;if(input.id==="tireReplaceV"&&input.checked)$("tireStraightenV").checked=false;if(input.id==="tireStraightenA"&&input.checked)$("tireReplaceA").checked=false;if(input.id==="tireReplaceA"&&input.checked)$("tireStraightenA").checked=false;updatePreview()})});
+$("preview").addEventListener("input",()=>{manualOverride=$("preview").value!==lastGenerated});$("copyBtn").addEventListener("click",async()=>{const b=$("copyBtn"),o=b.textContent;try{await navigator.clipboard.writeText($("preview").value)}catch{$("preview").select();document.execCommand("copy")}b.textContent="✓ Gekopieerd";setTimeout(()=>b.textContent=o,1000)});$("resetBtn").addEventListener("click",()=>{document.querySelectorAll('input[type="checkbox"],input[type="radio"]').forEach(i=>i.checked=false);lastGenerated="";manualOverride=false;$("preview").value=""});updateChainringPositionOptions();
+updatePreview();
+</script>
+</body>
+</html>
