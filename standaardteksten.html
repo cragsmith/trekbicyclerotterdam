@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -472,7 +470,8 @@ body {
 <div class="extra-section"><div class="extra-section-title">Aandrijflijn</div>
 <label class="extra-option"><input type="checkbox" id="chainReplace" onchange="updatePreview()"><span>Ketting vervangen</span></label>
 <label class="extra-option"><input type="checkbox" id="chainTensioned" onchange="updatePreview()"><span>Ketting opgespannen en gesmeerd</span></label>
-<label class="extra-option"><input type="checkbox" id="cassetteReplace" onchange="updatePreview()"><span>Cassette vervangen</span></label></div>
+<label class="extra-option"><input type="checkbox" id="cassetteReplace" onchange="updatePreview()"><span>Cassette vervangen</span></label>
+<label class="extra-option"><input type="checkbox" id="bottomBracketReplace" onchange="updatePreview()"><span>Trapas vervangen</span></label></div>
 <div class="extra-section"><div class="axle-grid"><div class="extra-section-title">Banden</div><div class="axle-heading">V</div><div class="axle-heading">A</div>
 <div>Binnenband</div><input type="checkbox" id="innerFront" onchange="updatePreview()"><input type="checkbox" id="innerRear" onchange="updatePreview()">
 <div>Buitenband</div><input type="checkbox" id="outerFront" onchange="updatePreview()"><input type="checkbox" id="outerRear" onchange="updatePreview()"></div></div>
@@ -695,6 +694,7 @@ function getExtraWorkLines() {
     if (chainReplace.checked) lines.push("- Ketting vervangen");
     if (chainTensioned.checked) lines.push("- Ketting opgespannen en gesmeerd");
     if (cassetteReplace.checked) lines.push("- Cassette vervangen");
+    if (bottomBracketReplace.checked) lines.push("- Trapas vervangen");
 
     const of = outerFront.checked, or = outerRear.checked;
     const inf = innerFront.checked, inr = innerRear.checked;
